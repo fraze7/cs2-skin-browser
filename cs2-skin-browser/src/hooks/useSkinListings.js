@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 
-const API_BASE = 'https://csfloat.com/api/v1'
+const API_BASE = '/csfloat-api/v1'
 
 const WEAR_RANGES = {
   'Factory New':    [0,    0.07],
