@@ -316,6 +316,104 @@ p {
   color: var(--accent);
 }
 
+/* ── Results count ── */
+.results-count {
+  font-size: 13px;
+  color: var(--text);
+  margin-bottom: 14px;
+}
+
+/* ── Skeleton loading ── */
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.45; }
+}
+
+.skeleton-card {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  animation: pulse 1.6s ease-in-out infinite;
+}
+
+.skeleton-img {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  background: var(--code-bg);
+}
+
+.skeleton-body {
+  padding: 10px 12px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.skeleton-line {
+  height: 11px;
+  border-radius: 4px;
+  background: var(--code-bg);
+}
+
+.skeleton-footer {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 4px;
+}
+
+/* ── Rarity colour bar ── */
+.skin-card::before {
+  content: '';
+  display: block;
+  height: 3px;
+  background: var(--rarity-color, var(--border));
+}
+
+.skin-card[data-rarity="1"] { --rarity-color: #b0c3d9; }
+.skin-card[data-rarity="2"] { --rarity-color: #5e98d9; }
+.skin-card[data-rarity="3"] { --rarity-color: #4b69ff; }
+.skin-card[data-rarity="4"] { --rarity-color: #8847ff; }
+.skin-card[data-rarity="5"] { --rarity-color: #d32ce6; }
+.skin-card[data-rarity="6"] { --rarity-color: #eb4b4b; }
+.skin-card[data-rarity="7"] { --rarity-color: #e4ae39; }
+
+/* ── Badges ── */
+.skin-badges {
+  display: flex;
+  gap: 5px;
+  min-height: 18px;
+}
+
+.badge {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 3px;
+  line-height: 1.5;
+}
+
+.badge-stattrak {
+  background: rgba(207, 106, 50, 0.15);
+  color: #cf6a32;
+}
+
+.badge-souvenir {
+  background: rgba(200, 166, 0, 0.15);
+  color: #a07800;
+}
+
+@media (prefers-color-scheme: dark) {
+  .badge-souvenir { color: #d4a017; }
+  .badge-stattrak { color: #e0824a; }
+}
+
+/* ── Status messages ── */
+.status-detail {
+  font-size: 13px;
+  margin-top: 6px;
+  opacity: 0.7;
+}
+
 /* ── Watchlist Panel ── */
 .watchlist-panel {
   margin-top: 48px;

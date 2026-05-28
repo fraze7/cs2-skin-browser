@@ -49,6 +49,8 @@ export default function App() {
       <main className="main">
         <ListingsGrid
           listings={visibleListings}
+          total={listings.length}
+          search={filters.search}
           loading={loading}
           error={error}
           watchlist={watchlist}
