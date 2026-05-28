@@ -316,6 +316,17 @@ p {
   color: var(--accent);
 }
 
+/* ── Watchlist Panel ── */
+.watchlist-panel {
+  margin-top: 48px;
+  padding-top: 32px;
+  border-top: 1px solid var(--border);
+}
+
+.watchlist-title {
+  margin-bottom: 20px;
+}
+
 code,
 .counter {
   font-family: var(--mono);

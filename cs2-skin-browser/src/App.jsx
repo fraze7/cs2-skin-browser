@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import Header from './components/Header'
 import FilterPanel from './components/FilterPanel'
 import ListingsGrid from './components/ListingsGrid'
+import WatchlistPanel from './components/WatchlistPanel'
 import { useSkinListings } from './hooks/useSkinListings'
 
 const DEFAULT_FILTERS = {
@@ -47,6 +48,7 @@ export default function App() {
           watchlist={watchlist}
           onWatch={toggleWatch}
         />
+        <WatchlistPanel watchlist={watchlist} onWatch={toggleWatch} />
       </main>
     </>
   )
