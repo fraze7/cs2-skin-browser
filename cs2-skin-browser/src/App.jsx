@@ -7,7 +7,7 @@ import { useSkinListings } from './hooks/useSkinListings'
 
 const DEFAULT_FILTERS = {
   search: '',
-  weapon: '',
+  defIndex: '',
   wears: [],
   minFloat: 0,
   maxFloat: 1,
@@ -23,6 +23,12 @@ export default function App() {
     }
   })
   const { listings, loading, error } = useSkinListings(filters)
+
+  const visibleListings = filters.search
+    ? listings.filter(l =>
+        l.item.market_hash_name.toLowerCase().includes(filters.search.toLowerCase())
+      )
+    : listings
 
   useEffect(() => {
     localStorage.setItem('cs2-watchlist', JSON.stringify(watchlist))
@@ -42,7 +48,7 @@ export default function App() {
       <FilterPanel filters={filters} onChange={setFilters} />
       <main className="main">
         <ListingsGrid
-          listings={listings}
+          listings={visibleListings}
           loading={loading}
           error={error}
           watchlist={watchlist}

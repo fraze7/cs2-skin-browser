@@ -21,10 +21,10 @@ export function useSkinListings(filters) {
     clearTimeout(timerRef.current)
     timerRef.current = setTimeout(async () => {
       const f = JSON.parse(filtersKey)
-      const params = new URLSearchParams({ limit: 20, type: 'buy_now' })
+      const limit = f.defIndex ? 50 : 20
+      const params = new URLSearchParams({ limit, type: 'buy_now' })
 
-      const nameParts = [f.weapon, f.search].filter(Boolean).join(' | ')
-      if (nameParts) params.set('market_hash_name', nameParts)
+      if (f.defIndex) params.set('def_index', f.defIndex)
 
       if (f.wears.length > 0) {
         const ranges = f.wears.map(w => WEAR_RANGES[w])

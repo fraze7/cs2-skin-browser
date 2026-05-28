@@ -1,7 +1,17 @@
 const WEAPONS = [
-  'AK-47', 'M4A4', 'M4A1-S', 'AWP', 'Desert Eagle',
-  'USP-S', 'Glock-18', 'MP9', 'P250', 'Five-SeveN',
-  'Karambit', 'Butterfly Knife', 'M9 Bayonet',
+  { label: 'AK-47',          defIndex: 7   },
+  { label: 'M4A4',           defIndex: 16  },
+  { label: 'M4A1-S',         defIndex: 60  },
+  { label: 'AWP',            defIndex: 9   },
+  { label: 'Desert Eagle',   defIndex: 1   },
+  { label: 'USP-S',          defIndex: 61  },
+  { label: 'Glock-18',       defIndex: 4   },
+  { label: 'Five-SeveN',     defIndex: 3   },
+  { label: 'MP9',            defIndex: 34  },
+  { label: 'P250',           defIndex: 36  },
+  { label: 'Karambit',       defIndex: 507 },
+  { label: 'Butterfly Knife',defIndex: 515 },
+  { label: 'M9 Bayonet',     defIndex: 508 },
 ]
 
 const WEARS = [
@@ -37,12 +47,12 @@ export default function FilterPanel({ filters, onChange }) {
 
         <select
           className="filter-select"
-          value={filters.weapon}
-          onChange={e => set('weapon', e.target.value)}
+          value={filters.defIndex}
+          onChange={e => set('defIndex', e.target.value ? Number(e.target.value) : '')}
         >
           <option value="">Any weapon</option>
           {WEAPONS.map(w => (
-            <option key={w} value={w}>{w}</option>
+            <option key={w.defIndex} value={w.defIndex}>{w.label}</option>
           ))}
         </select>
       </div>
