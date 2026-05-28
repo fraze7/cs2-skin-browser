@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Header from './components/Header'
 import FilterPanel from './components/FilterPanel'
 import ListingsGrid from './components/ListingsGrid'
@@ -14,8 +14,18 @@ const DEFAULT_FILTERS = {
 
 export default function App() {
   const [filters, setFilters] = useState(DEFAULT_FILTERS)
-  const [watchlist, setWatchlist] = useState([])
+  const [watchlist, setWatchlist] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem('cs2-watchlist')) ?? []
+    } catch {
+      return []
+    }
+  })
   const { listings, loading, error } = useSkinListings(filters)
+
+  useEffect(() => {
+    localStorage.setItem('cs2-watchlist', JSON.stringify(watchlist))
+  }, [watchlist])
 
   function toggleWatch(listing) {
     setWatchlist(prev =>
