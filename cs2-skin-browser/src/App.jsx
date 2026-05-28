@@ -1,7 +1,9 @@
+import SkinCard from './SkinCard'
+
 function App() {
   return (
     <div>
-      <h1>CS2 Skin Browser</h1>
+      <SkinCard />
     </div>
   )
 }
