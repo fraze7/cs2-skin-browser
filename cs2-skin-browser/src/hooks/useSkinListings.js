@@ -37,7 +37,7 @@ export function useSkinListings(filters) {
 
       setLoading(true)
       setError(null)
-
+    try {
               const res = await fetch(`${API_BASE}/listings?${params}`)
 
                   if (!res.ok) {
