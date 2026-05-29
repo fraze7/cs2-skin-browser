@@ -1,19 +1,19 @@
-                                      import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef } from 'react'
 
 const API_BASE = '/api'
 
 const WEAR_RANGES = {
-  'Factory New':    [0,    0.07],
-  'Minimal Wear':   [0.07, 0.15],
-  'Field-Tested':   [0.15, 0.38],
-  'Well-Worn':      [0.38, 0.45],
+  'Factory New': [0, 0.07],
+  'Minimal Wear': [0.07, 0.15],
+  'Field-Tested': [0.15, 0.38],
+  'Well-Worn': [0.38, 0.45],
   'Battle-Scarred': [0.45, 1.0],
 }
 
 export function useSkinListings(filters) {
   const [listings, setListings] = useState([])
-  const [loading, setLoading]   = useState(false)
-  const [error, setError]       = useState(null)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(null)
   const timerRef = useRef(null)
   const filtersKey = JSON.stringify(filters)
 
@@ -37,12 +37,12 @@ export function useSkinListings(filters) {
 
       setLoading(true)
       setError(null)
-    try {
-                              const res = await fetch(`${API_BASE}/listings?${params}`)
+      try {
+        const res = await fetch(`${API_BASE}/listings?${params}`)
 
-                          if (!res.ok) {
-                              const body = await res.json().catch(() => ({}))
-                    throw new Error(body.message || `HTTP ${res.status}`)
+        if (!res.ok) {
+          const body = await res.json().catch(() => ({}))
+          throw new Error(body.message || `HTTP ${res.status}`)
         }
         const json = await res.json()
         setListings(json.data ?? [])
