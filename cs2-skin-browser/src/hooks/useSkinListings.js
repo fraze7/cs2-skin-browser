@@ -38,11 +38,11 @@ export function useSkinListings(filters) {
       setLoading(true)
       setError(null)
     try {
-              const res = await fetch(`${API_BASE}/listings?${params}`)
+                              const res = await fetch(`${API_BASE}/listings?${params}`)
 
-                  if (!res.ok) {
-                    const body = await res.json().catch(() => ({}))
-          throw new Error(body.message || `HTTP ${res.status}`)
+                          if (!res.ok) {
+                              const body = await res.json().catch(() => ({}))
+                    throw new Error(body.message || `HTTP ${res.status}`)
         }
         const json = await res.json()
         setListings(json.data ?? [])
