@@ -1,0 +1,5 @@
+{
+    "buildCommand": "cd cs2-skin-browser && npm install && npm run build",
+    "outputDirectory": "cs2-skin-browser/dist",
+    "installCommand": "echo skip"
+}
