@@ -2,7 +2,7 @@
 
 A React app for browsing live CS2 skin listings from the [CSFloat](https://csfloat.com) marketplace. Built as a portfolio project to demonstrate React, custom hooks, API integration, and CSS.
 
-![CS2 Skin Browser screenshot](screenshot.png)
+![CS2 Skin Browser screenshot](cs2-skin-browser/screenshot.png)
 
 ---
 
