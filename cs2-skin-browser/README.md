@@ -1,16 +1,93 @@
-# React + Vite
+# CS2 Skin Browser
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A React app for browsing live CS2 skin listings from the [CSFloat](https://csfloat.com) marketplace. Built as a portfolio project to demonstrate React, custom hooks, API integration, and CSS.
 
-Currently, two official plugins are available:
+![CS2 Skin Browser screenshot](screenshot.png)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+---
 
-## React Compiler
+## Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **Live listings** — real buy-now listings pulled directly from the CSFloat API
+- **Weapon filter** — dropdown to filter by weapon type (AK-47, AWP, Karambit, etc.)
+- **Wear filter** — checkboxes for Factory New, Minimal Wear, Field-Tested, etc.
+- **Float range slider** — set min/max float values to narrow down condition precisely
+- **Skin name search** — instant client-side filtering by name within fetched results
+- **Watchlist** — save listings with a single click; persists across page refreshes via `localStorage`
+- **Rarity colour bar** — each card shows the skin's rarity colour (Consumer → Covert → Gold)
+- **StatTrak™ / Souvenir badges** — labelled clearly on cards where applicable
+- **Skeleton loading** — placeholder cards animate while listings are fetching
+- **Dark mode** — respects the OS colour scheme preference
 
-## Expanding the ESLint configuration
+## Tech stack
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+| | |
+|---|---|
+| Framework | React 19 + Vite |
+| Styling | Plain CSS with custom properties |
+| Data | [CSFloat public API](https://csfloat.com/api) |
+| Persistence | `localStorage` |
+
+## Getting started
+
+### 1. Get a CSFloat API key
+
+Create a free account at [csfloat.com](https://csfloat.com), then go to **Account Settings → API** to generate a key.
+
+### 2. Clone and install
+
+```bash
+git clone https://github.com/your-username/cs2-skin-browser.git
+cd cs2-skin-browser
+npm install
+```
+
+### 3. Add your API key
+
+Create a `.env.local` file in the project root:
+
+```
+VITE_CSFLOAT_API_KEY=your_api_key_here
+```
+
+> `.env.local` is gitignored — your key will never be committed.
+
+### 4. Run
+
+```bash
+npm run dev
+```
+
+Open [http://localhost:5173](http://localhost:5173).
+
+## How it works
+
+The `useSkinListings(filters)` custom hook manages all API communication:
+
+- API calls are **debounced by 500 ms** so typing doesn't fire a request on every keystroke
+- **Weapon filter** sends a `def_index` parameter to the CSFloat API (server-side)
+- **Wear and float filters** send `min_float` / `max_float` (server-side)
+- **Text search** is applied client-side on the returned listings — the CSFloat public API doesn't expose a text-search endpoint
+- When a weapon is selected the hook fetches **50 listings**; otherwise **20**
+
+The Vite dev server proxies requests to `https://csfloat.com` to avoid CORS in the browser:
+
+```
+/csfloat-api/v1/listings → https://csfloat.com/api/v1/listings
+```
+
+## Project structure
+
+```
+src/
+  components/
+    Header.jsx
+    FilterPanel.jsx      # weapon dropdown, wear checkboxes, float sliders, search input
+    ListingsGrid.jsx     # skeleton loader, result count, card grid
+    SkinCard.jsx         # rarity bar, badges, watch button
+    WatchlistPanel.jsx
+  hooks/
+    useSkinListings.js   # debounced fetch, filter → API param mapping
+  App.jsx
+  index.css
+```
