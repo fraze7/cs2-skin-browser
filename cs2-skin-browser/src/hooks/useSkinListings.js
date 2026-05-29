@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 
-const API_BASE = '/csfloat-api/v1'
+const API_BASE = '/api'
 
 const WEAR_RANGES = {
   'Factory New':    [0,    0.07],
@@ -38,12 +38,10 @@ export function useSkinListings(filters) {
       setLoading(true)
       setError(null)
 
-      try {
-        const res = await fetch(`${API_BASE}/listings?${params}`, {
-          headers: { Authorization: import.meta.env.VITE_CSFLOAT_API_KEY },
-        })
-        if (!res.ok) {
-          const body = await res.json().catch(() => ({}))
+              const res = await fetch(`${API_BASE}/listings?${params}`)
+
+                  if (!res.ok) {
+                    const body = await res.json().catch(() => ({}))
           throw new Error(body.message || `HTTP ${res.status}`)
         }
         const json = await res.json()
