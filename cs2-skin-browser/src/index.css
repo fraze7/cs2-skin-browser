@@ -439,3 +439,14 @@ code {
   padding: 4px 8px;
   background: var(--code-bg);
 }
+
+
+/* ── Fallback banner ── */
+.fallback-banner {
+    padding: 8px 24px;
+    background: var(--accent-bg);
+    border-bottom: 1px solid var(--accent-border);
+    color: var(--accent);
+    font-size: 13px;
+    text-align: center;
+}
