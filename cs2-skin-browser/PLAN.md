@@ -37,9 +37,11 @@ App
 7. ✅ Write README with screenshots
 
 ## To Do
-- [ ] Fix CSFloat rate limiting on Vercel ("too many requests from too many IPs") — Vercel's outgoing IPs rotate.
-      Options: longer cache on `/api/listings`, pin the function to one region, or a fixed-IP proxy.
-- [ ] Retake `screenshot.png` once live data works (current one predates the sort/reset controls)
+- [x] Reduce CSFloat calls to avoid "too many requests from too many IPs" (Vercel's outgoing IPs rotate):
+      edge cache, in-function cache + error cooldown, param allow-list, browser-side cache
+- [ ] Confirm live data works on Vercel after the caching changes. If CSFloat still blocks the key,
+      the remaining fix is a fixed outgoing IP (Vercel Static IPs on a paid plan, or a small proxy server)
+- [x] Retake `screenshot.png`
 - [ ] Optional: split FilterPanel into smaller components if it keeps growing
 
 ## Key Notes
