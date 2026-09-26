@@ -49,7 +49,9 @@ export default function App() {
       <Header />
       {usingFallback && (
         <div className="fallback-banner">
-          Live feed unavailable{error && ` (${error})`} — showing sample data
+          Showing sample listings — CSFloat's free API key is for personal use,
+          so live data only loads when running the project locally.
+          {import.meta.env.DEV && error && ` (${error})`}
         </div>
       )}
       <FilterPanel
