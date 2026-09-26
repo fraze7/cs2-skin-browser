@@ -4,18 +4,15 @@
 Portfolio project to demonstrate React, API integration, and frontend skills for job applications.
 
 ## Stack
-- React + Vite
-- Tailwind CSS
-- CSFloat public API (requires free API key from CSFloat account)
+- React 19 + Vite
+- Plain CSS with custom properties (Tailwind was planned but not used)
+- CSFloat API (requires free API key from CSFloat account)
+- Vercel for hosting + a serverless function (`api/listings.js`) that proxies CSFloat
 
 ## Component Structure
 App
 ├── Header
-├── FilterPanel
-│   ├── SearchInput
-│   ├── WeaponFilter (dropdown)
-│   ├── WearFilter (checkboxes)
-│   └── FloatRangeSlider
+├── FilterPanel        (search, weapon, sort, reset, wear checkboxes, float sliders — all in one component)
 ├── ListingsGrid
 │   └── SkinCard
 └── WatchlistPanel
@@ -23,21 +20,31 @@ App
 
 ## Data Flow
 1. User sets filters → state updates in App
-2. useEffect watches filter state → calls CSFloat API
-3. Response stored in listings state → passed to ListingsGrid
-4. Watchlist stored in localStorage
+2. `useSkinListings(filters)` debounces 500 ms → calls `/api/listings`
+3. `/api/listings` adds the API key server-side and forwards to CSFloat
+4. Response stored in listings state → passed to ListingsGrid
+5. Text search filters the loaded listings client-side (CSFloat has no name search) — no refetch
+6. If the API fails, sample listings are shown instead (filters and sort still apply)
+7. Watchlist stored in localStorage
 
 ## Build Order
-1. ✅ Project scaffold (Vite + React + Tailwind)
+1. ✅ Project scaffold (Vite + React)
 2. ✅ Static SkinCard component with hardcoded data
-3. Wire up CSFloat API, get real data rendering
-4. Add filter state and connect to API params
-5. Add localStorage watchlist
-6. Polish UI, loading states, error handling
-7. Write README with screenshots
+3. ✅ Wire up CSFloat API, get real data rendering
+4. ✅ Add filter state and connect to API params (weapon, wear, float, sort)
+5. ✅ Add localStorage watchlist
+6. ✅ Polish UI, loading states, error handling (skeletons, sample-data fallback, image placeholder, reset button)
+7. ✅ Write README with screenshots
+
+## To Do
+- [ ] Fix CSFloat rate limiting on Vercel ("too many requests from too many IPs") — Vercel's outgoing IPs rotate.
+      Options: longer cache on `/api/listings`, pin the function to one region, or a fixed-IP proxy.
+- [ ] Retake `screenshot.png` once live data works (current one predates the sort/reset controls)
+- [ ] Optional: split FilterPanel into smaller components if it keeps growing
 
 ## Key Notes
 - CSFloat API prices are in cents — divide by 100 for display
-- Debounce the search input (don't fire API call on every keystroke)
-- Need a useSkinListings(filters) custom hook for API logic
-- API key from CSFloat account settings
+- API key is `CSFLOAT_API_KEY` — in `.env.local` for local dev, in Vercel project env vars for deploys.
+  No `VITE_` prefix, so it never reaches the browser bundle.
+- `npm run dev` runs the serverless function inside Vite (no `vercel dev` needed)
+- Skin images: `https://community.steamstatic.com/economy/image/{icon_url}/256fx256f`
