@@ -75,6 +75,8 @@ The `useSkinListings(filters)` custom hook manages all API communication:
 
 The browser never talks to CSFloat directly. It calls `/api/listings`, a Vercel serverless function (`api/listings.js`) that adds the API key and forwards the request to `https://csfloat.com/api/v1/listings`. In development, a small Vite plugin runs that same function inside the dev server, so `npm run dev` is all you need.
 
+To stay under CSFloat's limits, responses are cached at several levels: Vercel's edge cache (5 minutes), the function's own memory (which also serves the last good listings if CSFloat errors, and pauses calls for a minute after an error), and the browser (so switching filters back and forth doesn't refetch). Only known query parameters are forwarded, so random query strings can't bypass the cache.
+
 If the live API fails (bad key, rate limit, outage), the app falls back to built-in sample listings. Filters and sorting still work on the sample data.
 
 ## Project structure

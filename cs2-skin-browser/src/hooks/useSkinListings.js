@@ -2,6 +2,10 @@ import { useState, useEffect, useRef } from 'react'
 import { sampleListings } from '../data/sampleListings'
 
 const API_BASE = '/api'
+const CACHE_MS = 5 * 60 * 1000
+
+// Results per query string for this page session, so flipping between filters doesn't refetch
+const responseCache = new Map() // query string → { listings, time }
 
 export const WEAR_RANGES = {
   'Factory New': [0, 0.07],
@@ -61,17 +65,28 @@ export function useSkinListings(filters) {
       if (min > 0) params.set('min_float', min)
       if (max < 1) params.set('max_float', max)
 
+      const qs = params.toString()
+      const cached = responseCache.get(qs)
+      if (cached && Date.now() - cached.time < CACHE_MS) {
+        setListings(cached.listings)
+        setError(null)
+        setUsingFallback(false)
+        return
+      }
+
       setLoading(true)
       setError(null)
       setUsingFallback(false)
       try {
-        const res = await fetch(`${API_BASE}/listings?${params}`)
+        const res = await fetch(`${API_BASE}/listings?${qs}`)
         if (!res.ok) {
           const body = await res.json().catch(() => ({}))
           throw new Error(body.message || body.error || `HTTP ${res.status}`)
         }
         const json = await res.json()
-        setListings(json.data ?? [])
+        const data = json.data ?? []
+        responseCache.set(qs, { listings: data, time: Date.now() })
+        setListings(data)
       } catch (e) {
         // Live API failed — show sample data so the UI still demonstrates functionality
         setListings(filterSample(f))
