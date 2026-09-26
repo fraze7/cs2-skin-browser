@@ -39,8 +39,8 @@ App
 ## To Do
 - [x] Reduce CSFloat calls to avoid "too many requests from too many IPs" (Vercel's outgoing IPs rotate):
       edge cache, in-function cache + error cooldown, param allow-list, browser-side cache
-- [ ] Confirm live data works on Vercel after the caching changes. If CSFloat still blocks the key,
-      the remaining fix is a fixed outgoing IP (Vercel Static IPs on a paid plan, or a small proxy server)
+- [x] Decided: the deployed site shows sample listings. CSFloat refuses the key from Vercel (free keys are
+      for personal use), so live data only loads locally. The banner explains this to visitors.
 - [x] Retake `screenshot.png`
 - [ ] Optional: split FilterPanel into smaller components if it keeps growing
 
