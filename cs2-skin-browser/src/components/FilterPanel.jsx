@@ -14,6 +14,15 @@ const WEAPONS = [
   { label: 'M9 Bayonet',     defIndex: 508 },
 ]
 
+const SORTS = [
+  { label: 'Best deal',            value: 'best_deal'     },
+  { label: 'Newest',               value: 'most_recent'   },
+  { label: 'Price: low to high',   value: 'lowest_price'  },
+  { label: 'Price: high to low',   value: 'highest_price' },
+  { label: 'Float: low to high',   value: 'lowest_float'  },
+  { label: 'Float: high to low',   value: 'highest_float' },
+]
+
 const WEARS = [
   'Factory New',
   'Minimal Wear',
@@ -22,10 +31,21 @@ const WEARS = [
   'Battle-Scarred',
 ]
 
-export default function FilterPanel({ filters, onChange }) {
+export default function FilterPanel({ filters, onChange, onReset, isDefault }) {
   function set(key, value) {
     onChange({ ...filters, [key]: value })
   }
+
+  // Keep min ≤ max by dragging the other handle along
+  function setMinFloat(value) {
+    onChange({ ...filters, minFloat: value, maxFloat: Math.max(value, filters.maxFloat) })
+  }
+
+  function setMaxFloat(value) {
+    onChange({ ...filters, maxFloat: value, minFloat: Math.min(value, filters.minFloat) })
+  }
+
+  const slidersDisabled = filters.wears.length > 0
 
   function toggleWear(wear) {
     const next = filters.wears.includes(wear)
@@ -55,6 +75,21 @@ export default function FilterPanel({ filters, onChange }) {
             <option key={w.defIndex} value={w.defIndex}>{w.label}</option>
           ))}
         </select>
+
+        <select
+          className="filter-select"
+          value={filters.sortBy}
+          onChange={e => set('sortBy', e.target.value)}
+          aria-label="Sort by"
+        >
+          {SORTS.map(s => (
+            <option key={s.value} value={s.value}>{s.label}</option>
+          ))}
+        </select>
+
+        <button className="reset-btn" onClick={onReset} disabled={isDefault}>
+          Reset filters
+        </button>
       </div>
 
       <div className="filter-row">
@@ -72,14 +107,15 @@ export default function FilterPanel({ filters, onChange }) {
         </div>
       </div>
 
-      <div className="filter-row float-row">
+      <div className={`filter-row float-row${slidersDisabled ? ' disabled' : ''}`}>
         <label className="float-label">
           Float min
           <input
             type="range"
             min="0" max="1" step="0.01"
             value={filters.minFloat}
-            onChange={e => set('minFloat', parseFloat(e.target.value))}
+            disabled={slidersDisabled}
+            onChange={e => setMinFloat(parseFloat(e.target.value))}
           />
           <span>{filters.minFloat.toFixed(2)}</span>
         </label>
@@ -89,10 +125,14 @@ export default function FilterPanel({ filters, onChange }) {
             type="range"
             min="0" max="1" step="0.01"
             value={filters.maxFloat}
-            onChange={e => set('maxFloat', parseFloat(e.target.value))}
+            disabled={slidersDisabled}
+            onChange={e => setMaxFloat(parseFloat(e.target.value))}
           />
           <span>{filters.maxFloat.toFixed(2)}</span>
         </label>
+        {slidersDisabled && (
+          <span className="float-hint">Using the float range of the selected wears</span>
+        )}
       </div>
     </div>
   )

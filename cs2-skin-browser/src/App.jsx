@@ -11,6 +11,7 @@ const DEFAULT_FILTERS = {
   wears: [],
   minFloat: 0,
   maxFloat: 1,
+  sortBy: 'best_deal',
 }
 
 export default function App() {
@@ -23,6 +24,7 @@ export default function App() {
     }
   })
   const { listings, loading, error, usingFallback } = useSkinListings(filters)
+  const isDefault = JSON.stringify(filters) === JSON.stringify(DEFAULT_FILTERS)
 
   const visibleListings = filters.search
     ? listings.filter(l =>
@@ -47,10 +49,15 @@ export default function App() {
       <Header />
       {usingFallback && (
         <div className="fallback-banner">
-          Live feed unavailable — showing sample data
+          Live feed unavailable{error && ` (${error})`} — showing sample data
         </div>
       )}
-      <FilterPanel filters={filters} onChange={setFilters} />
+      <FilterPanel
+        filters={filters}
+        onChange={setFilters}
+        onReset={() => setFilters(DEFAULT_FILTERS)}
+        isDefault={isDefault}
+      />
       <main className="main">
         <ListingsGrid
           listings={visibleListings}
