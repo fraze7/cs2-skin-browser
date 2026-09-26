@@ -12,6 +12,8 @@ A React app for browsing live CS2 skin listings from the [CSFloat](https://csflo
 - **Weapon filter** — dropdown to filter by weapon type (AK-47, AWP, Karambit, etc.)
 - **Wear filter** — checkboxes for Factory New, Minimal Wear, Field-Tested, etc.
 - **Float range slider** — set min/max float values to narrow down condition precisely
+- **Sort** — best deal, newest, price or float (ascending/descending)
+- **Reset filters** — one click back to the defaults
 - **Skin name search** — instant client-side filtering by name within fetched results
 - **Watchlist** — save listings with a single click; persists across page refreshes via `localStorage`
 - **Rarity colour bar** — each card shows the skin's rarity colour (Consumer → Covert → Gold)
@@ -44,13 +46,13 @@ npm install
 
 ### 3. Add your API key
 
-Create a `.env.local` file in the project root:
+Create a `.env.local` file in `cs2-skin-browser/` (next to `package.json`):
 
 ```
-VITE_CSFLOAT_API_KEY=your_api_key_here
+CSFLOAT_API_KEY=your_api_key_here
 ```
 
-> `.env.local` is gitignored — your key will never be committed.
+> `.env.local` is gitignored. The key has no `VITE_` prefix on purpose: it is only read server-side (by the `/api/listings` function), so it is never bundled into the browser code. On Vercel, set `CSFLOAT_API_KEY` in the project's environment variables.
 
 ### 4. Run
 
@@ -67,14 +69,13 @@ The `useSkinListings(filters)` custom hook manages all API communication:
 - API calls are **debounced by 500 ms** so typing doesn't fire a request on every keystroke
 - **Weapon filter** sends a `def_index` parameter to the CSFloat API (server-side)
 - **Wear and float filters** send `min_float` / `max_float` (server-side)
+- **Sort** sends `sort_by` (server-side)
 - **Text search** is applied client-side on the returned listings — the CSFloat public API doesn't expose a text-search endpoint
 - When a weapon is selected the hook fetches **50 listings**; otherwise **20**
 
-The Vite dev server proxies requests to `https://csfloat.com` to avoid CORS in the browser:
+The browser never talks to CSFloat directly. It calls `/api/listings`, a Vercel serverless function (`api/listings.js`) that adds the API key and forwards the request to `https://csfloat.com/api/v1/listings`. In development, a small Vite plugin runs that same function inside the dev server, so `npm run dev` is all you need.
 
-```
-/csfloat-api/v1/listings → https://csfloat.com/api/v1/listings
-```
+If the live API fails (bad key, rate limit, outage), the app falls back to built-in sample listings. Filters and sorting still work on the sample data.
 
 ## Project structure
 

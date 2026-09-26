@@ -450,3 +450,43 @@ code {
     font-size: 13px;
     text-align: center;
 }
+
+.skin-img-placeholder {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--code-bg);
+  color: var(--text);
+  font-size: 12px;
+}
+
+.reset-btn {
+  font: inherit;
+  font-size: 13px;
+  padding: 6px 12px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-h);
+  cursor: pointer;
+}
+
+.reset-btn:hover:not(:disabled) {
+  border-color: var(--accent-border);
+}
+
+.reset-btn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.float-row.disabled .float-label {
+  opacity: 0.45;
+}
+
+.float-hint {
+  font-size: 12px;
+  color: var(--text);
+}
