@@ -1,46 +1,12 @@
 import { useState, useEffect, useRef } from 'react'
 import { sampleListings } from '../data/sampleListings'
+import { floatBounds, filterListings } from '../utils/listings'
 
 const API_BASE = '/api'
 const CACHE_MS = 5 * 60 * 1000
 
 // Results per query string for this page session, so flipping between filters doesn't refetch
 const responseCache = new Map() // query string → { listings, time }
-
-export const WEAR_RANGES = {
-  'Factory New': [0, 0.07],
-  'Minimal Wear': [0.07, 0.15],
-  'Field-Tested': [0.15, 0.38],
-  'Well-Worn': [0.38, 0.45],
-  'Battle-Scarred': [0.45, 1.0],
-}
-
-// Wear checkboxes take priority over the float sliders; multiple wears span min→max of their ranges
-function floatBounds(f) {
-  if (f.wears.length > 0) {
-    const ranges = f.wears.map(w => WEAR_RANGES[w])
-    return [Math.min(...ranges.map(r => r[0])), Math.max(...ranges.map(r => r[1]))]
-  }
-  return [f.minFloat, f.maxFloat]
-}
-
-const SORTERS = {
-  lowest_price:  (a, b) => a.price - b.price,
-  highest_price: (a, b) => b.price - a.price,
-  lowest_float:  (a, b) => a.item.float_value - b.item.float_value,
-  highest_float: (a, b) => b.item.float_value - a.item.float_value,
-}
-
-// Mirror the server-side filters so the sample data still responds to the UI
-function filterSample(f) {
-  const [min, max] = floatBounds(f)
-  const result = sampleListings.filter(l =>
-    (!f.defIndex || l.item.def_index === f.defIndex) &&
-    l.item.float_value >= min &&
-    l.item.float_value <= max
-  )
-  return SORTERS[f.sortBy] ? result.sort(SORTERS[f.sortBy]) : result
-}
 
 export function useSkinListings(filters) {
   const [listings, setListings] = useState([])
@@ -89,7 +55,7 @@ export function useSkinListings(filters) {
         setListings(data)
       } catch (e) {
         // Live API failed — show sample data so the UI still demonstrates functionality
-        setListings(filterSample(f))
+        setListings(filterListings(sampleListings, f))
         setUsingFallback(true)
         setError(e.message)
       } finally {
