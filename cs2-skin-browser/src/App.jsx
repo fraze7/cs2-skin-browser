@@ -4,6 +4,7 @@ import FilterPanel from './components/FilterPanel'
 import ListingsGrid from './components/ListingsGrid'
 import WatchlistPanel from './components/WatchlistPanel'
 import { useSkinListings } from './hooks/useSkinListings'
+import { searchListings } from './utils/listings'
 
 const DEFAULT_FILTERS = {
   search: '',
@@ -26,11 +27,7 @@ export default function App() {
   const { listings, loading, error, usingFallback } = useSkinListings(filters)
   const isDefault = JSON.stringify(filters) === JSON.stringify(DEFAULT_FILTERS)
 
-  const visibleListings = filters.search
-    ? listings.filter(l =>
-        l.item.market_hash_name.toLowerCase().includes(filters.search.toLowerCase())
-      )
-    : listings
+  const visibleListings = searchListings(listings, filters.search)
 
   useEffect(() => {
     localStorage.setItem('cs2-watchlist', JSON.stringify(watchlist))

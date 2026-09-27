@@ -5,6 +5,7 @@ Portfolio project to demonstrate React, API integration, and frontend skills for
 
 ## Stack
 - React 19 + Vite
+- Vitest + React Testing Library for tests (`npm test`)
 - Plain CSS with custom properties (Tailwind was planned but not used)
 - CSFloat API (requires free API key from CSFloat account)
 - Vercel for hosting + a serverless function (`api/listings.js`) that proxies CSFloat
@@ -42,6 +43,8 @@ App
 - [x] Decided: the deployed site shows sample listings. CSFloat refuses the key from Vercel (free keys are
       for personal use), so live data only loads locally. The banner explains this to visitors.
 - [x] Retake `screenshot.png`
+- [x] Expand sample data to 47 listings covering every weapon in the dropdown and every wear
+- [x] Tests: Vitest + React Testing Library (filter logic, App behaviour, serverless function, sample data)
 - [ ] Optional: split FilterPanel into smaller components if it keeps growing
 
 ## Key Notes

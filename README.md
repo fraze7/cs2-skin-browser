@@ -29,6 +29,7 @@ A React app for browsing live CS2 skin listings from the [CSFloat](https://csflo
 | Styling | Plain CSS with custom properties |
 | Data | [CSFloat public API](https://csfloat.com/api) |
 | Persistence | `localStorage` |
+| Testing | Vitest + React Testing Library |
 
 ## Getting started
 
@@ -79,9 +80,29 @@ To stay under CSFloat's limits, responses are cached at several levels: Vercel's
 
 If the live API fails (bad key, rate limit, outage), the app falls back to built-in sample listings. Filters and sorting still work on the sample data.
 
+## Testing
+
+```bash
+npm test
+```
+
+29 tests with [Vitest](https://vitest.dev) and React Testing Library:
+
+- **Filter logic** (`utils/listings.test.js`) — wear → float ranges, weapon/wear/float filters, sorting, search
+- **App behaviour** (`App.test.jsx`) — renders the whole app with the API failing, then filters, searches, uses the watchlist and resets, the way a user would
+- **Serverless function** (`tests/api-listings.test.js`) — against a fake CSFloat: parameter allow-list, caching, error cooldown, serving stale data
+- **Sample data** (`data/sampleListings.test.js`) — every float matches its wear, every weapon in the dropdown is covered
+- **Image URLs** (`utils/steamImage.test.js`)
+
+Use `npm run test:watch` to re-run tests on save.
+
 ## Project structure
 
 ```
+api/
+  listings.js            # Vercel serverless function: adds the API key, caches, proxies CSFloat
+cs2-skin-browser/tests/
+  api-listings.test.js   # tests for api/listings.js
 src/
   components/
     Header.jsx
@@ -91,6 +112,11 @@ src/
     WatchlistPanel.jsx
   hooks/
     useSkinListings.js   # debounced fetch, filter → API param mapping
+  utils/
+    listings.js          # wear ranges, filtering, sorting, search (pure functions)
+    steamImage.js        # Steam CDN image URLs
+  data/
+    sampleListings.js    # fallback listings (47, covering every weapon and wear)
   App.jsx
   index.css
 ```
